@@ -11,10 +11,10 @@ import streamlit as st
 import pandas as pd
 from sklearn.model_selection import train_test_split
 from sklearn.ensemble import RandomForestClassifier
-from sklearn.preprocessing import StandardScaler
 from sklearn.metrics import accuracy_score, classification_report, confusion_matrix
 import matplotlib.pyplot as plt
 import seaborn as sns
+from sklearn.preprocessing import LabelEncoder
 
 # Título de la aplicación
 st.title("Herramienta de Análisis de Alertas Tempranas")
@@ -58,6 +58,11 @@ if uploaded_file:
         file_name="alertas_unicas.csv",
         mime="text/csv"
     )
+
+    # Codificar columnas categóricas
+    le = LabelEncoder()
+    for column in df.select_dtypes(include='object').columns:
+        df[column] = le.fit_transform(df[column])
 
     # Preparar los datos para el modelo predictivo
     X = df.drop(columns=['ESTADO'])
